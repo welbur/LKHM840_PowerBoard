@@ -56,14 +56,15 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern SPI_HandleTypeDef hspi1;
-extern CAN_HandleTypeDef hcan2;
-extern UART_HandleTypeDef huart3;
+
+//extern UART_HandleTypeDef huart1;
+//extern UART_HandleTypeDef huart6;
+//extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim12;
-extern TIM_HandleTypeDef htim14;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -98,7 +99,7 @@ void EXTI2_IRQHandler(void)
 void EXTI3_IRQHandler(void)
 {
 #ifdef DEVBoard
-	HAL_GPIO_EXTI_IRQHandler(DIB_INT_PIN1);
+	HAL_GPIO_EXTI_IRQHandler(KEY_Pin);
 #elif defined(DEVBoardYD)
 	// LOG("exti3\r\n");
 	HAL_GPIO_EXTI_IRQHandler(KEY_Pin);
@@ -282,6 +283,14 @@ void TIM4_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM4 global interrupt.
+  */
+void TIM6_IRQHandler(void)
+{
+  HAL_TIM_IRQHandler(&htim4);
+}
+
+/**
   * @brief This function handles TIM8 break interrupt and TIM12 global interrupt.
   */
 void TIM8_BRK_TIM12_IRQHandler(void)
@@ -289,25 +298,30 @@ void TIM8_BRK_TIM12_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim12);
 }
 
+#if 1
 /**
   * @brief This function handles TIM8 trigger and commutation interrupts and TIM14 global interrupt.
   */
 void TIM8_TRG_COM_TIM14_IRQHandler(void)
 {
 	//LOG("tim14 irqhandler\r\n");
-	HAL_TIM_IRQHandler(&htim14);
+	//HAL_TIM_IRQHandler(&htim14);
   
 }
-
-#ifdef PowerBoard_ACS37800
-/**
- * @brief  This function handles SPI 1 interrupt request.
- * @param  None
- * @retval None
- */
-void SPI1_IRQHandler(void)
-{
-	// LOGI("spi2 irq.....\r\n");
-	HAL_SPI_IRQHandler(&hspi1);
-}
 #endif
+
+/**
+  * @brief This function handles USART1 global interrupt.
+  */
+void USART1_IRQHandler(void)
+{
+  HAL_UART_IRQHandler(&huart1);
+}
+
+/**
+  * @brief This function handles USART1 global interrupt.
+  */
+void USART6_IRQHandler(void)
+{
+  HAL_UART_IRQHandler(&huart6);
+}

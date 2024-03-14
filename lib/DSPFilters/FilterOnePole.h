@@ -6,6 +6,7 @@
 #include "stm32f4xx_hal.h"
 #include <math.h>
 #include "LOG.h"
+#include "MSP_TIM.h"
 
 uint64_t GetusTime(void);
 

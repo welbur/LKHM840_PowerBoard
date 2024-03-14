@@ -30,7 +30,7 @@ void MX_GPIO_Init(void);
 //void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 void EXTILine_Config(void);
-void SPI1_CS_GPIO_Init(void);
+
 
 #ifdef __cplusplus
 }

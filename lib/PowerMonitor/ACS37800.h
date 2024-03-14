@@ -8,6 +8,7 @@
 #ifndef ACS37800_H_
 #define ACS37800_H_
 
+#ifdef PowerBoard_ACS37800
 #include "main.h"
 #include <inttypes.h>
 #include <math.h> // for fabs()
@@ -483,4 +484,6 @@ void acs_getInstantVI(acs37800_t *acs_sensor, float *vcodes, float *icodes);
 void acs_getInstantP(acs37800_t *acs_sensor, float *pinstant);
 #endif
 
+
+#endif /* PowerBoard_ACS37800 */
 #endif /* ACS37800_H_ */

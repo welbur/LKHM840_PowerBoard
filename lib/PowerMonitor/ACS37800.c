@@ -5,6 +5,8 @@
  *  Author: gfcwfzkm
  */
 
+#ifdef PowerBoard_ACS37800
+
 #include "ACS37800.h"
 
 #define ACS_READ 0x80
@@ -179,7 +181,7 @@ ACS37800ERR ACS37800_setNumberOfSamples(uint32_t numberOfSamples, uint8_t eeprom
         return (error); // Bail
     }
 
-    osDelay(100); // Allow time for the shadow/eeprom memory to be updated - otherwise the next readRegister will return zero...
+   // osDelay(100); // Allow time for the shadow/eeprom memory to be updated - otherwise the next readRegister will return zero...
 
     return (error);
 }
@@ -724,3 +726,5 @@ void ACS37800_setCurrentRange(float newCurrent)
   _currentSensingRange = newCurrent;
 }
 #endif
+
+#endif /* PowerBoard_ACS37800 */

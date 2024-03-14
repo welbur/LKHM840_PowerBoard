@@ -1,3 +1,73 @@
+/* USER CODE BEGIN Header */
+/**
+ ******************************************************************************
+ * @file           : PinConfig.h
+ * @brief          : Created: 2023-08-11
+ *                   Author: WU555
+ ******************************************************************************
+ * @attention      : LKHM840 PowerBoard
+ *                   2023-08-11  V0.0.3
+ *
+ *       1、usart1用于与主控板通信用，采用私有背板协议，采用RS485方式
+ *           PA9     ------> USART1_TX
+ *           PA10    ------> USART1_RX
+ *           BaudRate = 921600
+ *
+ *       2、usart6用于与主控板通信用，第二个RS485，备用
+ *           PA11     ------> USART6_TX
+ *           PA12     ------> USART6_RX
+ *           BaudRate = 921600
+ *
+ *       3、usart3用于打印测试信息
+ *           PC10    ------> USART3_TX
+ *           PC11    ------> USART3_RX
+ *           BaudRate = 921600
+ *
+ * 		 4、通过tim输出pwm信号，或者是相位角控制信号
+ *  		 *  TIM3 GPIO Configuration
+ *			    PC6     ------> TIM3_CH1
+ *		 	    PC7     ------> TIM3_CH2
+ *			    PC8     ------> TIM3_CH3
+ *			    PC9     ------> TIM3_CH4
+ *			 *  TIM4 GPIO Configuration
+ *			    PB6     ------> TIM4_CH1
+ *			    PB7     ------> TIM4_CH2
+ *			    PB8     ------> TIM4_CH3
+ *			    PB9     ------> TIM4_CH4
+ *			 *  TIM12 GPIO Configuration
+ *		  	    PB15     ------> TIM12_CH2
+ *
+ *	 	 5、过零检测信号输入
+ * 				PB0      ------> ZRC_IN1
+ * 				PB1      ------> ZRC_IN2
+ * 				PB2      ------> ZRC_IN3
+ * 				PB3      ------> ZRC_IN4
+ * 				PB4      ------> ZRC_IN5
+ * 				PB5      ------> ZRC_IN6
+ * 				PB10     ------> ZRC_IN7
+ * 				PB12     ------> ZRC_IN8
+ * 				PB13     ------> ZRC_IN9
+ * 
+ * 		 6、ADC信号进入 （使用MLX91220时采用）
+ *     		 *  ADC1 GPIO Configuration
+ *			    PA0     ------> ADC1_IN0
+ *			    PA1     ------> ADC1_IN1
+ *			    PA2     ------> ADC1_IN2
+ *			    PA3     ------> ADC1_IN3
+ *			    PA4     ------> ADC1_IN4
+ *			    PA5     ------> ADC1_IN5
+ *			    PA6     ------> ADC1_IN6
+ *			    PA7     ------> ADC1_IN7
+ *			    PC4     ------> ADC1_IN14
+ *
+ *       7、WorkLed, BoardID
+ *              PC0     ------> WorkLed
+ *  			PC1     ------> BoardID_1
+ * 				PC2     ------> BoardID_2
+ * 
+ ******************************************************************************
+ */
+
 #ifndef _PINCONFIG_H_
 #define	_PINCONFIG_H_
 
@@ -45,23 +115,29 @@
 #define WorkLed_Pin                     BLUE_Pin
 #define WorkLed_GPIO_Port               BLUE_GPIO_Port
 #else                             //实际使用的板子
+/* 工作指示灯 */
 #define WorkLed_Pin                     GPIO_PIN_0
 #define WorkLed_GPIO_Port               GPIOC
+/* 用于配制 板地址 */
+#define BoardID_1_Pin                   GPIO_PIN_1
+#define BoardID_1_GPIO_Port             GPIOC
+#define BoardID_2_Pin                   GPIO_PIN_2
+#define BoardID_2_GPIO_Port             GPIOC
 #endif
 
 
 /*********************************************************************************
  * @brief 通过tim输出pwm信号，或者是相位角控制信号
- *  TIM1 GPIO Configuration
-    PA8     ------> TIM1_CH1
-    PA9     ------> TIM1_CH2
-    PA10     ------> TIM1_CH3
-    PA11     ------> TIM1_CH4
  *  TIM3 GPIO Configuration
     PC6     ------> TIM3_CH1
     PC7     ------> TIM3_CH2
     PC8     ------> TIM3_CH3
     PC9     ------> TIM3_CH4
+ *  TIM4 GPIO Configuration
+    PB6     ------> TIM4_CH1
+    PB7     ------> TIM4_CH2
+    PB8     ------> TIM4_CH3
+    PB9     ------> TIM4_CH4
  *  TIM12 GPIO Configuration
     PB15     ------> TIM12_CH2
  */
@@ -107,63 +183,70 @@
 
 /*********************************************************************************
  * @brief 过零检测信号输入
- * PA8      ------> ZRC_IN1
- * PA9      ------> ZRC_IN2
- * PA10     ------> ZRC_IN3
- * PA11     ------> ZRC_IN4
- * PA12     ------> ZRC_IN5
- * PA13     ------> ZRC_IN6
- * PA14     ------> ZRC_IN7
- * PA15     ------> ZRC_IN8
- * PD2      ------> ZRC_IN9
+ *              PB0      ------> ZRC_IN1
+ * 				PB1      ------> ZRC_IN2
+ * 				PB2      ------> ZRC_IN3
+ * 				PB3      ------> ZRC_IN4
+ * 				PB4      ------> ZRC_IN5
+ * 				PB5      ------> ZRC_IN6
+ * 				PB10     ------> ZRC_IN7
+ * 				PB12     ------> ZRC_IN8
+ * 				PB13     ------> ZRC_IN9
  */
 #if defined (PowerBoard_ACS37800) || defined (PowerBoard_MLX91220) 
-#define ZRC_IN1_Pin                           GPIO_PIN_8
-#define ZRC_IN1_Port                          GPIOA
-#define ZRC_IN1_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN1_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN1_Pin                           GPIO_PIN_0
+#define ZRC_IN1_Port                          GPIOB
+#define ZRC_IN1_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN1_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN1_Pin_EXTI_IRQn                 EXTI0_IRQn
 
-#define ZRC_IN2_Pin                           GPIO_PIN_9
-#define ZRC_IN2_Port                          GPIOA
-#define ZRC_IN2_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN2_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN2_Pin                           GPIO_PIN_1
+#define ZRC_IN2_Port                          GPIOB
+#define ZRC_IN2_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN2_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN2_Pin_EXTI_IRQn                 EXTI1_IRQn
 
-#define ZRC_IN3_Pin                           GPIO_PIN_10
-#define ZRC_IN3_Port                          GPIOA
-#define ZRC_IN3_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN3_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN3_Pin                           GPIO_PIN_2
+#define ZRC_IN3_Port                          GPIOB
+#define ZRC_IN3_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN3_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN3_Pin_EXTI_IRQn                 EXTI2_IRQn
 
-#define ZRC_IN4_Pin                           GPIO_PIN_11
-#define ZRC_IN4_Port                          GPIOA
-#define ZRC_IN4_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN4_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN4_Pin                           GPIO_PIN_3
+#define ZRC_IN4_Port                          GPIOB
+#define ZRC_IN4_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN4_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN4_Pin_EXTI_IRQn                 EXTI3_IRQn
 
-#define ZRC_IN5_Pin                           GPIO_PIN_12
-#define ZRC_IN5_Port                          GPIOA
-#define ZRC_IN5_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN5_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN5_Pin                           GPIO_PIN_4
+#define ZRC_IN5_Port                          GPIOB
+#define ZRC_IN5_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN5_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN5_Pin_EXTI_IRQn                 EXTI4_IRQn
 
-#ifndef DEVBoardYD
-#define ZRC_IN6_Pin                           GPIO_PIN_13
-#define ZRC_IN6_Port                          GPIOA
-#define ZRC_IN6_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN6_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN6_Pin                           GPIO_PIN_5
+#define ZRC_IN6_Port                          GPIOB
+#define ZRC_IN6_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN6_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN6_Pin_EXTI_IRQn                 EXTI9_5_IRQn
 
-#define ZRC_IN7_Pin                           GPIO_PIN_14
-#define ZRC_IN7_Port                          GPIOA
-#define ZRC_IN7_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN7_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
+#define ZRC_IN7_Pin                           GPIO_PIN_10
+#define ZRC_IN7_Port                          GPIOB
+#define ZRC_IN7_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN7_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN7_Pin_EXTI_IRQn                 EXTI15_10_IRQn
 
-#define ZRC_IN8_Pin                           GPIO_PIN_15
-#define ZRC_IN8_Port                          GPIOA
-#define ZRC_IN8_Pin_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()
-#define ZRC_IN8_Pin_CLK_DISABLE()             __HAL_RCC_GPIOA_CLK_DISABLE()
-#endif
+#define ZRC_IN8_Pin                           GPIO_PIN_12
+#define ZRC_IN8_Port                          GPIOB
+#define ZRC_IN8_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN8_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN8_Pin_EXTI_IRQn                 EXTI15_10_IRQn
 
-#define ZRC_IN9_Pin                           GPIO_PIN_2
-#define ZRC_IN9_Port                          GPIOD
-#define ZRC_IN9_Pin_CLK_ENABLE()              __HAL_RCC_GPIOD_CLK_ENABLE()
-#define ZRC_IN9_Pin_CLK_DISABLE()             __HAL_RCC_GPIOD_CLK_DISABLE()
+#define ZRC_IN9_Pin                           GPIO_PIN_13
+#define ZRC_IN9_Port                          GPIOB
+#define ZRC_IN9_Pin_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()
+#define ZRC_IN9_Pin_CLK_DISABLE()             __HAL_RCC_GPIOB_CLK_DISABLE()
+#define ZRC_IN9_Pin_EXTI_IRQn                 EXTI15_10_IRQn
 
 #endif
 
@@ -296,21 +379,29 @@
 #define ADC1_IN14_CLK_DISABLE()               __HAL_RCC_GPIOC_CLK_DISABLE()
 #endif
 
-/*spi1用于读取计量芯片acs37800*/
+
 /**
- * @brief SPI1 的GPIO 引脚 
- *	PB3     ------> SPI1_SCK
- *	PB4     ------> SPI1_MISO
- *	PB5     ------> SPI1_MOSI
+ * @brief usart1 的GPIO 引脚 
+ * PA9      ------> USART1_TX
+ * PA10     ------> USART1_RX
  */
-#if defined(PowerBoard_ACS37800)
-#define SPI1_SCK_PIN                     GPIO_PIN_3
-#define SPI1_MISO_PIN                    GPIO_PIN_4
-#define SPI1_MOSI_PIN                    GPIO_PIN_5
-#define SPI1_GPIO_PORT                   GPIOB
-#define SPI1_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOB_CLK_ENABLE()
-#define SPI1_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOB_CLK_DISABLE()
-#endif
+#define USART1_TX_PIN                    GPIO_PIN_9
+#define USART1_RX_PIN                    GPIO_PIN_10
+#define USART1_GPIO_PORT                 GPIOA
+#define USART1_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOA_CLK_ENABLE()
+#define USART1_GPIO_CLK_DISABLE()        __HAL_RCC_GPIOA_CLK_DISABLE()
+
+
+/**
+ * @brief usart6 的GPIO 引脚 
+ * PA11     ------> USART6_TX
+ * PA12     ------> USART6_RX
+ */
+#define USART6_TX_PIN                    GPIO_PIN_11
+#define USART6_RX_PIN                    GPIO_PIN_12
+#define USART6_GPIO_PORT                 GPIOA
+#define USART6_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOA_CLK_ENABLE()
+#define USART6_GPIO_CLK_DISABLE()        __HAL_RCC_GPIOA_CLK_DISABLE()
 
 
 /**
@@ -323,18 +414,6 @@
 #define USART3_GPIO_PORT                 GPIOC
 #define USART3_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOC_CLK_ENABLE()
 #define USART3_GPIO_CLK_DISABLE()        __HAL_RCC_GPIOC_CLK_DISABLE()
-
-
-/**
- * @brief can2 的GPIO 引脚 
- * PB12     ------> CAN2_RX
- * PB13     ------> CAN2_TX
- */
-#define CAN2_RX_PIN                     GPIO_PIN_12
-#define CAN2_TX_PIN                     GPIO_PIN_13              
-#define CAN2_GPIO_PORT                  GPIOB 
-#define CAN2_GPIO_CLK_ENABLE()          __HAL_RCC_GPIOB_CLK_ENABLE()
-#define CAN2_GPIO_CLK_DISABLE()         __HAL_RCC_GPIOB_CLK_DISABLE()
 
 
 #ifdef __cplusplus

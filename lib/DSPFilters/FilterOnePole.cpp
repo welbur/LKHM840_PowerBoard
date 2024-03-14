@@ -32,11 +32,11 @@ void FilterOnePole::setFilter( FILTER_TYPE ft, float fc, float initialValue ) {
   Ylast = initialValue;
   X = initialValue;
 
-  LastUS = GetusTime();    //micros();
+  LastUS = HAL_getTick_us();    //micros();
 }
 
 float FilterOnePole::input( float inVal ) {
-  long time = GetusTime();  //micros();
+  long time = HAL_getTick_us();  //micros();
   ElapsedUS = float(time - LastUS);   // cast to float here, for math
   LastUS = time;                      // update this now
 
